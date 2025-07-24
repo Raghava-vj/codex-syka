@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CodeX - Code Editor Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f8cff;
+            --secondary: #23272f;
+            --accent: #ffb347;
+            --bg: #f7f9fb;
+            --header-height: 70px;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--secondary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            height: var(--header-height);
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(79,140,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            animation: fadeInDown 1s;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 2px;
+            user-select: none;
+        }
+        .logo svg {
+            width: 36px;
+            height: 36px;
+            animation: rotateLogo 2s linear infinite;
+        }
+        @keyframes rotateLogo {
+            0% { transform: rotate(0);}
+            100% { transform: rotate(360deg);}
+        }
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            transition: max-height 0.3s;
+        }
+        nav a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+            position: relative;
+        }
+        nav a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+        }
+        nav a:hover {
+            color: var(--primary);
+        }
+        nav a:hover::after {
+            width: 100%;
+        }
+        .signup-btn {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 0.7em 1.6em;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(79,140,255,0.12);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-left: 1rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 2px 8px rgba(79,140,255,0.12);}
+            50% { box-shadow: 0 4px 16px rgba(255,179,71,0.18);}
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 1rem;
+            z-index: 20;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 28px;
+            height: 4px;
+            margin: 4px 0;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        /* Hamburger animation when open */
+        .menu-toggle.open span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        .menu-toggle.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.open span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+        @media (max-width: 900px) {
+            .main-heading { font-size: 2.2rem;}
+            .editor-svg { width: 220px;}
+            header { padding: 0 1rem;}
+            nav { gap: 1rem;}
+            .editor-container {
+                width: 90vw;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 24px;
+            }
+        }
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem 0.5rem;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+            .logo { font-size: 1.5rem;}
+            .menu-toggle {
+                display: flex;
+            }
+            nav {
+                flex-direction: column;
+                gap: 0.5rem;
+                width: 100%;
+                background: #fff;
+                position: absolute;
+                top: var(--header-height);
+                left: 0;
+                max-height: 0;
+                overflow: hidden;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+                transition: max-height 0.3s;
+                z-index: 15;
+            }
+            nav.open {
+                max-height: 400px;
+                padding: 1rem 0;
+            }
+            .signup-btn { margin-left: 0;}
+            main { padding: 2rem 0.5rem;}
+            .main-heading { font-size: 1.5rem;}
+            .sub-heading { font-size: 1rem;}
+            .editor-svg { width: 120px;}
+            .editor-container {
+                width: 100vw;
+                min-width: 0;
+                margin: 32px 0;
+                margin-left: 0;
+                margin-right: 0;
+                padding: 12px 4vw;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            }
+            .editor-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .code-input, .output-area {
+                font-size: 0.95rem;
+                padding: 10px;
+            }
+            .run-btn {
+                width: 100%;
+                padding: 10px 0;
+            }
+        }
+        /* Editor container styles */
+        .editor-container {
+            background: #fff8f8;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            padding: 32px;
+            width: 600px;
+            max-width: 98vw;
+            margin-top: 100px;
+            margin-bottom: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 1rem;
+        }
+        .editor-header select {
+            background: #ff0808;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: background 0.2s;
+        }
+        .editor-header select:focus {
+            background: #414345;
+        }
+        .code-input {
+            width: 100%;
+            min-height: 180px;
+            background: #122834;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Fira Mono', 'Consolas', monospace;
+            padding: 16px;
+            margin-bottom: 16px;
+            resize: vertical;
+            outline: none;
+            box-sizing: border-box;
+            transition: background 0.2s;
+        }
+        .code-input:focus {
+            background: #414345;
+        }
+        .output-area {
+            background: #122834;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 40px;
+            color: #fff;
+            font-size: 1rem;
+            margin: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .editor-label {
+            color: #b3b3b3;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .run-btn {
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: background 0.2s;
+        }
+        .run-btn:hover {
+            background: #232526;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <!-- SVG Logo -->
+            <svg viewBox="0 0 40 40" fill="none">
+                <rect x="6" y="6" width="28" height="28" rx="6" fill="#4f8cff"/>
+                <path d="M14 20L20 26L26 20" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M20 14V26" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            CodeX
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav id="mainNav">
+            <a href="indexhtml">Home</a>
+            <a href="features.html">Features</a>
+            <a href="docs.html">Docs</a>
+            <a href="price.html">Pricing</a>
+            <button class="signup-btn">Sign Up</button>
+        </nav>
+    </header>
+   
+<div class="editor-container" style="animation: fadeIn 1.6s;">
+    <div class="editor-header">
+        <label for="language" class="editor-label" style="color: #ff0808;">Choose Language:</label>
+        <select id="language">
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+        <option value="csharp">C#</option>
+        <option value="ruby">Ruby</option>
+        <option value="php">PHP</option>
+        <option value="typescript">TypeScript</option>
+        <option value="swift">Swift</option>
+        <option value="sql">SQL</option>    
+        </select>
+    </div>
+    <label for="code" class="editor-label">Write your code:</label>
+    <textarea id="code" class="code-input" spellcheck="false"></textarea>
+    <button class="run-btn" id="runBtn">Run</button>
+    <label class="editor-label">Output:</label>
+    <div id="output" class="output-area"></div>
+    </div>
+
+    <footer>
+    &copy; 2025 CodeX. Crafted with <span style="color:var(--accent);font-size:1.2em;">&#10084;</span> for developers.
+    <br>
+    <small style="display:inline-block; animation: fadeInUp 1.5s;">
+            Developed by <a href="https://syka.in/" target="_blank" style="color:var(--primary);text-decoration:none;">SYKA</a>
+        </small>
+    </footer>
+
+    <script>
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+    menuToggle.addEventListener('click', function() {
+        menuToggle.classList.toggle('open');
+        mainNav.classList.toggle('open');
+    });
+    // Close menu when clicking a link (on mobile)
+    mainNav.querySelectorAll('a, .signup-btn').forEach(el => {
+        el.addEventListener('click', () => {
+            if (window.innerWidth <= 600) {
+                menuToggle.classList.remove('open');
+                mainNav.classList.remove('open');
+            }
+        });
+    });
+
+    const codeInput = document.getElementById('code');
+    const languageSelect = document.getElementById('language');
+    const outputArea = document.getElementById('output');
+    const runBtn = document.getElementById('runBtn');
+
+    function runCode() {
+        const lang = languageSelect.value;
+        const code = codeInput.value;
+        outputArea.textContent = '';
+        if (lang === 'javascript') {
+        try {
+            // Capture console.log output
+            let logs = [];
+            const log = (...args) => logs.push(args.join(' '));
+            const originalLog = window.console.log;
+            window.console.log = log;
+            let result = eval(code);
+            window.console.log = originalLog;
+            outputArea.textContent = logs.length ? logs.join('\n') : (result !== undefined ? result : '');
+        } catch (e) {
+            outputArea.textContent = 'Error: ' + e.message;
+        }
+        } else if (lang === 'html') {
+        outputArea.innerHTML = code;
+        } else if (lang === 'css') {
+        outputArea.innerHTML = '<style>' + code + '</style><div>CSS applied!</div>';
+        } else {
+        outputArea.textContent = 'Output not supported for this language.';
+        }
+    }
+
+    runBtn.addEventListener('click', runCode);
+    </script>
+</body>
+</html>
